@@ -1,6 +1,6 @@
 ---
 title: "Research Topics"
-author: "Team name - Team member 1, Team member 2, Team member 3, Team member 4"
+author: "StatPadders - CJ Frederickson, Toma Shigaki-Than, Camden Reeves, Sam Kakarla"
 format: pdf
 execute: 
   warning: false
@@ -10,10 +10,20 @@ editor: visual
 
 ## Research Topic 1
 
+Movies and IMDB Ratings.
+
+There are a plethora of data regarding films available online; we could explore the analysis of different runtimes, release dates, and critics' ratings as it correlates to the overall audience ratings and box office performance of films.
+
 \pagebreak
 
 ## Research Topic 2
 
+Super Bowl Ads
+
+The Super Bowl is the most viewed broadcast of the year nationwide, so on Super Bowl days, every brand tries to pull out the stops to gain the best exposure. What leads to the best success in an ad? We can examine how indicator variables of ad length, volume, categorical variables such as if there is humor, a celebrity appearance, etc. are related to the success of the ad— measured in how many views the ad got online *after* the Super Bowl.
+
 \pagebreak
 
 ## Research Topic 3
+
+We want to do something within the sports world, maybe. Our hypothesis could be based on different sports. For example, basketball: Use effective field goal percentage, turnover percentage, offensive rebound percentage, and free throws per field goal attempt to predict a team's win-loss percentage 
