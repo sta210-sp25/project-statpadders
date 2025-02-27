@@ -14,7 +14,6 @@ library(tidyverse)
 library(tidymodels)
 # add other packages as needed
 
-# add code to load data
 ```
 
 ## Introduction
@@ -27,7 +26,85 @@ library(tidymodels)
 
 ## Exploratory data analysis
 
-...
+```{r}
+#| label: EDA-mutate-certificate
+
+imdb_top_1000 <- imdb_top_1000 %>% 
+  mutate(no_votes_scaled = No_of_Votes / 10^6,
+         gross_scaled = Gross / 10^6,
+         Certificate = case_when(Certificate == "U" ~ "U", 
+                          Certificate == "A" ~ "A",
+                          TRUE ~ "Other"))
+
+```
+
+```{r}
+imdb_top_1000 %>% 
+  ggplot(aes(x = no_votes_scaled, y = Meta_score)) +
+    geom_point() +
+    labs(x = "Number of Votes (In Millions)",
+         y = "Meta-Score",
+         title = "Relationship Between Number of Votes on IMDB and Critic Meta-Score")
+
+imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = Meta_score)) +
+    geom_point() +
+    labs(x = "Gross Revenue (In Millions)",
+         y = "Meta-Score",
+         title = "Relationship Between Gross Revenue and Critic Meta-Score")
+
+imdb_top_1000 %>% 
+  ggplot(aes(x = Certificate)) +
+  geom_bar() +
+  labs(x = "Certificate",
+           y = "Frequency",
+           title = "Distribution of Types of Certificate in Films")
+
+imdb_top_1000 %>% 
+  ggplot(aes(x = no_votes_scaled, y = IMDB_Rating)) +
+    geom_point()+
+    labs(x = "Number of IMDB Votes (In Millions)",
+         y = "IMDB Rating",
+         title = "Relationship Between Number of Votes on IMDB Ratings")
+
+imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = IMDB_Rating)) +
+    geom_point() +
+    labs(x = "Gross Revenue (In Millions)",
+         y = "IMDB Rating",
+         title = "Relationship Between Gross Revenue and IMDB Ratings")
+```
+
+Upon initial EDA, it seems as if the relationship between gross revenue as a predictor for both IMDB and Metascore ratings are both nonlinear. Likewise, we see the same for the number of votes in relationship with the response variables. It does seem that there is a positive relationship between the number of votes on IMDB and the IMDB rating, but that is to be expected. For the other relationships, we may need to consider doing some data transformation.
+
+```{r}
+#| label: interaction effects
+
+imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = Meta_score, color = Certificate)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
+Upon initial EDA, it seems as if there is an interaction effect based on certificate of the film between films' gross revenue and their Meta score.
+
+
+```{r}
+#| label: response distribution
+imdb_top_1000 %>% 
+ggplot(aes(x = IMDB_Rating)) +
+  geom_histogram()
+```
+The distribution of IMDB Ratings (one of our response variables) seems to be skewed right.
+
+```{r}
+imdb_top_1000 %>% 
+ggplot(aes(x = Meta_score)) +
+  geom_histogram()
+```
+The distribution of meta-score (our other response variable) seems to be skewed left.
+
 
 ## Analysis approach
 
