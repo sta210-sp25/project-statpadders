@@ -39,6 +39,8 @@ imdb_top_1000 <- imdb_top_1000 %>%
 ```
 
 ```{r}
+#| label: visualizations
+
 imdb_top_1000 %>% 
   ggplot(aes(x = no_votes_scaled, y = Meta_score)) +
     geom_point() +
@@ -53,7 +55,7 @@ imdb_top_1000 %>%
          y = "Meta-Score",
          title = "Relationship Between Gross Revenue and Critic Meta-Score")
 
-imdb_top_1000 %>% 
+imdb_top_1000 %>%
   ggplot(aes(x = Certificate)) +
   geom_bar() +
   labs(x = "Certificate",
@@ -99,12 +101,26 @@ ggplot(aes(x = IMDB_Rating)) +
 The distribution of IMDB Ratings (one of our response variables) seems to be skewed right.
 
 ```{r}
+#| label: response-dist
 imdb_top_1000 %>% 
 ggplot(aes(x = Meta_score)) +
   geom_histogram()
 ```
 The distribution of meta-score (our other response variable) seems to be skewed left.
 
+```{r}
+#| label: meta-summary-stats
+
+imdb_top_1000 %>%
+  summarise(
+    meta_mean = mean(Meta_score),
+    meta_median = median(Meta_score),
+    meta_sd = sd(Meta_score),
+    meta_IQR = IQR(Meta_score),
+    meta_min = min(Meta_score),
+    meta_max = max(Meta_score)
+  )
+```
 
 ## Analysis approach
 
