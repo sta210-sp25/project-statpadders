@@ -10,7 +10,16 @@ The data dictionary for your data file(s) using the following format.
 
 | Variable  | Description               |
 |:----------|:--------------------------|
-| variable1 | Description of variable 1 |
-| variable2 | Description of variable 2 |
-| variable3 | Description of variable 3 |
-| ...       | ...                       |
+| IMDB_Rating | Rating of the movie at IMDB site |
+| Meta_score | Score earned by the movie |
+| Series_Title | Name of the movie |
+| Director | Name of the Director |
+| Overview | Mini story/summary of title |
+| Gross | Money earned by that movie |
+| No_of_votes | Total number of votes  |
+| Released_Year  | Year at which that movie released |
+| Runtime | Total runtime of the movie |
+| Certificate | Certificate earned by that movie |
+| Genre | Genre of the movie |
+
+
