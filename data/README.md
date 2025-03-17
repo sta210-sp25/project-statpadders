@@ -6,7 +6,7 @@ Then, include metadata about your dataset including information on provenance, d
 
 The data dictionary for your data file(s) using the following format.
 
-## Name of data file
+## imdb_top1000.csv
 
 | Variable  | Description               |
 |:----------|:--------------------------|
