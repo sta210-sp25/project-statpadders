@@ -21,5 +21,6 @@ The data dictionary for your data file(s) using the following format.
 | Runtime | Total runtime of the movie |
 | Certificate | Certificate earned by that movie |
 | Genre | Genre of the movie |
+| Difference | Scaled difference between Metascore and IMDB score |
 
 
