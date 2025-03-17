@@ -1,21 +1,35 @@
 ---
-title: "Your project title"
-author: "Team Name: Team member 1, Team member 2, Team member 3, Team member 4"
-date: "Update date"
+title: "Statpadders"
+author: "Toma Shigaki-Than, CJ Frederickson, Camden Reeves, Sam Kakarla"
+date: "March 17, 2025"
 format: pdf
 execute: 
   warning: false
   message: false
-  echo: false
+  echo: true
 editor: visual
 ---
 
 ```{r}
 #| label: load packages and data
 
+library(tidyverse)
+library(tidymodels)
+library(dplyr)
+
+imdb_top_1000 <- read_csv("data/imdb_top_1000.csv") |>
+  drop_na()
 ```
 
 Your written report goes here!
+
+```{r}
+imdb_top_1000 <- imdb_top_1000 |>
+  mutate(no_votes_scaled = No_of_Votes / 10^6,
+         gross_scaled = Gross / 10^6,
+         IMDB_scaled = IMDB_Rating *10,
+         difference = Meta_score - IMDB_scaled)
+```
 
 ::: callout-important
 Before you submit, make sure your code chunks are turned off with `echo: false` and there are no warnings or messages with `warning: false` and `message: false` in the YAML.
