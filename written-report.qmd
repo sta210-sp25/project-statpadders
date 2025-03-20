@@ -141,7 +141,7 @@ p3 <- imdb_top_1000 %>%
     y = "Frequency"
   )
  
-p1 + p2 + p3
+p1 + p2 + p3 + plot_annotation('Distribution of Potential Response Variables')
 
 imdb_top_1000 %>% 
   summarise(
@@ -198,7 +198,7 @@ p3 <- imdb_top_1000 %>%
     y = "Frequency"
   )
  
-p1 + p2 + p3
+p1 + p2 + p3 + plot_annotation('Distribution of Key Numerical Predictors')
 
 imdb_top_1000 %>% 
   summarise(
@@ -282,7 +282,8 @@ p3 <- imdb_top_1000 %>%
     y = "Difference Between IMDB and Meta Score"
   )
  
-p1 + p2 + p3
+p1 + p2 + p3 + 
+  plot_annotation('Film Gross vs. IMDB Score, MetaScore, and Score Difference')
 
 
 ```
@@ -354,7 +355,8 @@ p3 <- imdb_top_1000 %>%
     y = "Difference Between IMDB and Meta Score"
   )
  
-p1 + p2 + p3
+p1 + p2 + p3 + 
+  plot_annotation('Film Gross vs. IMDB Score, MetaScore, and Score Difference')
 
 ```
 
@@ -368,7 +370,7 @@ imdb_top_1000 %>%
   ggplot(aes(x = gross_scaled, y = difference, color = Certificate)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Gross Revenue vs Difference between MetaScore and IMDB Score",
+  labs(title = "Gross Revenue vs Difference between MetaScore \nand IMDB Score",
        subtitle = "By Certificate",
        x = "Gross Revenue \n(In Millions)",
        y = "Difference Between MetaScore and IMDB Score")
@@ -379,7 +381,7 @@ imdb_top_1000 %>%
   ggplot(aes(x = gross_scaled, y = difference, color = decade)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Gross Revenue vs Difference between MetaScore and IMDB Score",
+  labs(title = "Gross Revenue vs Difference between MetaScore \nand IMDB Score",
        subtitle = "By Decade Released",
        x = "Gross Revenue \n(In Millions)",
        y = "Difference Between MetaScore and IMDB Score",
