@@ -62,8 +62,6 @@ Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects amon
 - IMDB Score (score given by audience/fans on IMDB, scaled to match Meta-Score)
 - Difference (The quantity that the meta-score differs from the IMDB score)
 
-\pagebreak
-
 # Exploratory Data Analysis
 
 To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations.
@@ -109,8 +107,7 @@ corrplot(c, method = "number")
 
 Here, we created a correlation matrix to see which of our numerical predictors may be highly correlated, thus indicating potential multicollinearity. There is high correlation (0.97 correlation coefficient) between the variable `difference` and the variables `IMDB_scaled` and `meta_score`, but that is to be expected - the `difference` variable is mutated from both of those variables, to show the difference between them.`IMDB_scaled` and `no_votes_scaled` are also highly correlated with a coefficient of 0.62, but that is also to be expected - of course the votes on IMDB are correlated with an IMDB score. We would not fit a model with both of those variables.
 
-\pagebreak
-**Univariate EDA**
+# Univariate EDA
 
 ```{r}
 library(patchwork)
@@ -210,12 +207,10 @@ p1 + p2 + p3
 
 Add narrative here
 
-\pagebreak
 # Bivariate EDA
 
 do bivariate eda here
 
-\pagebreak
 # Interaction Effects
 
 explore interaction effects here
