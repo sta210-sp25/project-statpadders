@@ -25,7 +25,7 @@ imdb_top_1000 <- read_csv("data/imdb_top_1000.csv") |>
 
 # Introduction
 
-The proliferation of online review platforms has significantly influenced consumer decision-making across various industries, but particularly in entertainment. In the film industry, consumers rely on both professional critics and amateur audiences to gauge the quality of movies before making viewing decisions (Moon, Bergey, & Iacobucci, 2010). While professional critics evaluate films based on artistic and technical merit, amateur audiences may assess them based on personal enjoyment, accessibility, and entertainment value. This dual review system has created a dynamic where movies may receive different evaluations from critics and general audiences, raising questions about the relationship between the two and the factors influencing their divergence. Given this context, our research seeks to address the following question: What factors in a film influence IMDb user ratings and critic meta-scores; how do differences in these scores relate to movie characteristics such as gross earnings, number of votes, decade released, runtime, certificate, and genre?
+The proliferation of online review platforms has significantly influenced consumer decision-making across various industries, but particularly in entertainment. In the film industry, consumers rely on both professional critics and amateur audiences to gauge the quality of movies before making viewing decisions (Moon, Bergey, & Iacobucci, 2010). While professional critics evaluate films based on artistic and technical merit, amateur audiences may assess them based on personal enjoyment, accessibility, and entertainment value. This dual review system has created a dynamic where movies may receive different evaluations from critics and general audiences, raising questions about the relationship between the two and the factors influencing their divergence. Given this context, our research seeks to address the following question: What factors in a film influence IMDb user ratings and critic MetaScores; how do differences in these scores relate to movie characteristics such as gross earnings, number of votes, decade released, runtime, and certificate?
 
 **Motivation and Importance**
 
@@ -33,19 +33,19 @@ Understanding the discrepancies between audience and critic ratings is critical 
 
 **Hypotheses and Theoretical Considerations**
 
-We propose several key hypotheses regarding the divergence between IMDb ratings (representing audience scores) and critic meta-scores:
+We propose several key hypotheses regarding the divergence between IMDb ratings (representing audience scores) and critic MetaScores:
 
 **The Effect of Gross Earnings and Number of Votes**
 
-Are movies with higher gross earnings and a greater number of votes more likely to have higher IMDb ratings due to their broad audience reach, (while critics may evaluate them more critically, leading to a potential divergence in scores)? Conversely, could lower-grossing films receive higher meta-scores due to stronger artistic value but may not resonate as widely with general audiences, leading to lower IMDb ratings?
+Are movies with higher gross earnings and a greater number of votes more likely to have higher IMDb ratings due to their broad audience reach, (while critics may evaluate them more critically, leading to a potential divergence in scores)? Conversely, could lower-grossing films receive higher MetaScores due to stronger artistic value but may not resonate as widely with general audiences, leading to lower IMDb ratings?
 
 **Impact of Decade Released and Runtime**
 
-Could older movies have higher meta-scores due to their established reputation and critical re-evaluation over time, while IMDb ratings could fluctuate based on contemporary audience preferences? What about runtime? Could longer runtime movies receive higher meta-scores as they are often associated with more complex storytelling, while audiences may rate them lower due to attention-span and pacing concerns?
+Could older movies have higher MetaScores due to their established reputation and critical re-evaluation over time, while IMDb ratings could fluctuate based on contemporary audience preferences? What about runtime? Could longer runtime movies receive higher MetaScores as they are often associated with more complex storytelling, while audiences may rate them lower due to attention-span and pacing concerns?
 
 **The Role of Certificate (Censorship Rating)**
 
-R-rated movies may receive higher IMDb ratings due to mature content attracting a dedicated audience, whereas critics may assess them more rigorously depending on the execution of themes. Family-friendly movies may receive higher meta-scores due to broader accessibility but could have lower IMDb ratings if audiences find them less engaging compared to other categories. By investigating these hypotheses using this dataset that includes IMDb ratings, critic meta-scores, and various film characteristics, this study aims to provide a comprehensive analysis of the factors influencing rating discrepancies. Ultimately, our findings will offer valuable insights into how different audience segments perceive film quality, with implications for movie marketing, recommendation algorithms, and consumer behavior in the digital entertainment landscape.
+R-rated movies may receive higher IMDb ratings due to mature content attracting a dedicated audience, whereas critics may assess them more rigorously depending on the execution of themes. Family-friendly movies may receive higher MetaScores due to broader accessibility but could have lower IMDb ratings if audiences find them less engaging compared to other categories. By investigating these hypotheses using this dataset that includes IMDb ratings, critic MetaScores, and various film characteristics, this study aims to provide a comprehensive analysis of the factors influencing rating discrepancies. Ultimately, our findings will offer valuable insights into how different audience segments perceive film quality, with implications for movie marketing, recommendation algorithms, and consumer behavior in the digital entertainment landscape.
 
 In summary the following is our primary research question: how do different variable predictors in genre, censorship, runtime, and gross earnings predict how critics and fans will rate movies comparatively?
 
@@ -63,11 +63,11 @@ Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects amon
 - Number of Votes (numerical)
 
 **Response Variables**
-- Meta-Score (aggregate score of critics' ratings)
+- MetaScore (aggregate score of critics' ratings)
 
-- IMDB Score (score given by audience/fans on IMDB, scaled to match Meta-Score)
+- IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
 
-- Difference (The quantity that the meta-score differs from the IMDB score)
+- Difference (The quantity that the MetaScore differs from the IMDB score)
 
 # Exploratory Data Analysis
 
@@ -112,7 +112,7 @@ c <- cor(matrix)
 corrplot(c, method = "number")
 ```
 
-Here, we created a correlation matrix to see which of our numerical predictors may be highly correlated, thus indicating potential multicollinearity. There is high correlation (0.97 correlation coefficient) between the variable `difference` and the variables `IMDB_scaled` and `meta_score`, but that is to be expected - the `difference` variable is mutated from both of those variables, to show the difference between them.`IMDB_scaled` and `no_votes_scaled` are also highly correlated with a coefficient of 0.62, but that is also to be expected - of course the votes on IMDB are correlated with an IMDB score. We would not fit a model with both of those variables.
+Here, we created a correlation matrix to see which of our numerical predictors may be highly correlated, thus indicating potential multicollinearity. There is high correlation (0.97 correlation coefficient) between the variable `difference` and the variables `IMDB_scaled` and `meta_score`, but that is to be expected - the `difference` variable is mutated from both of those variables, to show the difference between them. `IMDB_scaled` and `no_votes_scaled` are also highly correlated with a coefficient of 0.62, but that is also to be expected - of course the votes on IMDB are correlated with an IMDB score. We would not fit a model with both of those variables.
 
 # Univariate EDA
 
@@ -130,7 +130,7 @@ p2 <- imdb_top_1000 %>%
   geom_histogram() +
   coord_cartesian(xlim = c(0, 100)) +
    labs(
-    x = "Meta-Score",
+    x = "MetaScore",
     y = "Frequency"
   )
 p3 <- imdb_top_1000 %>% 
@@ -170,11 +170,11 @@ imdb_top_1000 %>%
   separate(Statistic, into = c("Measure", "Variable"), sep = "_", extra = "merge") %>%
   pivot_wider(names_from = Measure, values_from = Value)
 ```
-As we can see from our response variables, scaled IMDB Score seems to be skewed right for these films, and scores tend to trend below between 76 and 93. Both the mean score and median score are about 79, standard deviation of about 3, IQR of 4, and a range of 17.
+As we can see from our response variables, scaled IMDB Score seems to be skewed right for these films, and scores tend to trend between 76 and 93. Both the mean score and median score are about 79, standard deviation of about 3, IQR of 4, and a range of 17.
 
-The distribution for meta-score seems to be skewed right, with a mean of about 77, a median about 78, a standard deviation of about 12, an IQR of 16 and a range of 72. 
+The distribution for MetaScore seems to be skewed right, with a mean of about 77, a median about 78, a standard deviation of about 12, an IQR of 16 and a range of 72. 
 
-Furthermore in terms of the difference between the two scores, it seems that the values are almost normally distributed, with a slight left skew. This suggests that it is equally common for a meta-score to be either higher or lower than the IMDB score, though slightly more often lower. There is an outlier of about 49 points lower than IMDB score (-49). The mean difference is about two points lower than IMDB score (-2), median of 1 point lower (-1), standard deviation of 12 points, IQR of about 15 points, and a range of 70 points.
+Furthermore in terms of the `difference` between the two scores, it seems that the values are almost normally distributed, with a slight left skew. This suggests that it is nearly equally common for a MetaScore to be either higher or lower than the IMDB score, though slightly more often lower. There is an outlier when MetaScore is about 49 points lower than IMDB score (-49). The mean `difference` is when about MetaScore is about two points lower than IMDB score (-2) and median at 1 point lower (-1). There is standard deviation of 12 points, IQR of about 15 points, and a range of 70 points.
 
 ```{r}
 p1 <- imdb_top_1000 %>% 
@@ -234,6 +234,27 @@ Run time seems fairly normal with a slight right skew. There is a potential outl
 
 Finally, number of votes has a right skew. With a potential outlier at about 2.34 million votes, it has a mean of about 356,000 votes, median of about 267,000 votes, standard deviation of about 354,000 votes, IQR of about 412,000 votes, and a range of about 2.32 million votes.
 
+```{r}
+imdb_top_1000 %>% 
+  ggplot(aes(x = decade)) +
+  geom_bar() + labs(
+    x = "Decade Released",
+    y = "Frequency",
+  )
+
+```
+The distribution of `decade` seems to be skewed left. This is expected, as newer films are more likely to have been added to the internet in real time after release whereas older films are added retroactively.
+```{r}
+imdb_top_1000 %>% 
+  ggplot(aes(x = Certificate)) +
+  geom_bar() +
+   labs(
+    x = "Certificate",
+    y = "Frequency",
+    fill = "Decade Released")
+```
+The distribution of `certificates` does not exhibit much of a normal shape, but notably the highest distribution is of "U" movies - those with unrestricted audiences.
+
 # Bivariate EDA
 
 ```{r}
@@ -249,7 +270,7 @@ p2 <- imdb_top_1000 %>%
   geom_point() +
    labs(
     x = "Film Gross \n(in Millions)",
-    y = "Meta-Score"
+    y = "MetaScore"
   )
 p3 <- imdb_top_1000 %>% 
   ggplot(aes(x = gross_scaled, y = difference )) +
@@ -264,7 +285,7 @@ p1 + p2 + p3
 
 ```
 
-Add narrative here
+Upon initial Bivariate EDA, a clear linear relationship does not seem to appear between film's gross in millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation that gives us a promising model.
 
 ```{r}
 library(patchwork)
@@ -293,7 +314,7 @@ imdb_top_1000 %>%
   )
 ```
 
-Similarly to IMDB score, the critics' median meta-scores also seem to be lower as movies are newer. In other words, the overall aggregated critic scores for films tend to be lower for movies in more recent decades.
+Similarly to IMDB score, the critics' median MetaScores also seem to be lower as movies are newer. In other words, the overall aggregated critic scores for films tend to be lower for movies in more recent decades.
 
 ```{r}
 imdb_top_1000 %>% 
@@ -306,7 +327,7 @@ imdb_top_1000 %>%
   )
 ```
 
-Judging from this EDA, the median difference between `Meta_score` and `IMDB_scaled` also tends to be lower as movies are newer. In other words, meta-scores tend to be lower than IMDB scores in more recent decades.
+Judging from this EDA, the median difference between `Meta_score` and `IMDB_scaled` also tends to be lower as movies are newer. In other words, MetaScores tend to be lower than IMDB scores in more recent decades.
 
 ```{r}
 library(patchwork)
@@ -321,7 +342,7 @@ p2 <- imdb_top_1000 %>%
   geom_point() +
    labs(
     x = "Run Time \n(in Minutes)",
-    y = "Meta-Score"
+    y = "MetaScore"
   )
 p3 <- imdb_top_1000 %>% 
   ggplot(aes(x = runtime, y = difference )) +
@@ -335,7 +356,7 @@ p1 + p2 + p3
 
 ```
 
-Add narrative here
+Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
 
 
 # Interaction Effects
