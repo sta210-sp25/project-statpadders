@@ -58,6 +58,18 @@ Data was obtained by means of a web scraping in Python and combined with reposit
 
 Additionally, we have the certificate variable: upon initial visualization of the distribution, we can see that there are many levels. To avoid overfitting a model, we may need to relevel these certificates to three basic categories: approved for all audiences, restricted, and other. Otherwise, if this does not pose an issue, we can keep as is.
 
+**Potential Predictors:**
+- Runtime (numerical)
+- Gross Revenue (numerical)
+- Certificate (categorical)
+- Decade Released (categorical)
+- Number of Votes (numerical)
+
+**Response Variables**
+- Meta-Score (aggregate score of critics' ratings)
+- IMDB Score (score given by audience/fans on IMDB, scaled to match Meta-Score)
+- Difference (The quantity that the meta-score differs from the IMDB score)
+
 \pagebreak
 
 # Exploratory Data Analysis
@@ -86,9 +98,9 @@ imdb_top_1000 <- imdb_top_1000 |>
                           Released_Year >= 2010 ~ "2010s",))
 ```
 
-Further, we turned our year into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not productive. Very few observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight) For data cleaning, and for better interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are divided into decades (i.e. 1950s, 1960s, etc.) This gives better interpretability for that variable.
+Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not productive. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight) For data cleaning, and for better interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are divided into decades (i.e. 1950s, 1960s, etc.) This gives better interpretability for that variable; grouping movies into decades creates a better identifier than individual years do.
 
-Additionally, the variable `Runtime` gave the runtime of each movie in the following template: "(number) mins". As such, it was a categorical variable. We changed this to remove the "mins" label, and make the runtime into a numerical variable, which only shows the number of minutes in that movie's runtime.
+Additionally, the variable `Runtime` listed the runtime of each movie in a string with the number followed by the word "mins." For example, a movie 90 minutes long would be listed as the string "90 mins" instead of the number 90. As such, this made `Runtime` a categorical variable. We changed this by removing the "mins" label and refactoring it as numeric, thus making the `Runtime` into a numerical variable.
 
 # Potential Multicollinearity
 ```{r}
@@ -215,6 +227,8 @@ do bivariate eda here
 # Interaction Effects
 
 explore interaction effects here
+
+
 ::: callout-important
 Before you submit, make sure your code chunks are turned off with `echo: false` and there are no warnings or messages with `warning: false` and `message: false` in the YAML.
 :::
