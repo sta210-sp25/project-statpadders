@@ -71,7 +71,7 @@ Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects amon
 
 # Exploratory Data Analysis
 
-To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations.
+To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher.
 
 ```{r}
 imdb_top_1000 <- imdb_top_1000 |>
@@ -272,6 +272,7 @@ library(patchwork)
 imdb_top_1000 %>% 
   ggplot(aes(x = decade, y = IMDB_scaled )) +
   geom_boxplot() + labs(
+    title = "Scaled IMDB Score vs. Decade Released",
     x = "Decade Released",
     y = "Scaled IMDB Score"
   )
@@ -286,8 +287,9 @@ imdb_top_1000 %>%
   ggplot(aes(x = decade, y = Meta_score )) +
   geom_boxplot() +
    labs(
+    title = "MetaScore vs. Decade Released",
     x = "Decade Released",
-    y = "Meta-Score"
+    y = "MetaScore"
   )
 ```
 
@@ -298,6 +300,7 @@ imdb_top_1000 %>%
   ggplot(aes(x = decade, y = difference )) +
   geom_boxplot() +
    labs(
+    title = "Difference Between IMDB and Meta Score \nvs. Decade Released",
     x = "Decade Released",
     y = "Difference Between IMDB and Meta Score"
   )
@@ -337,8 +340,33 @@ Add narrative here
 
 # Interaction Effects
 
-explore interaction effects here
+```{r}
+imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = difference, color = Certificate)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Gross Revenue vs Difference between MetaScore and IMDB Score",
+       subtitle = "By Certificate",
+       x = "Gross Revenue \n(In Millions)",
+       y = "Difference Between MetaScore and IMDB Score")
+```
 
+```{r}
+imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = difference, color = decade)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Gross Revenue vs Difference between MetaScore and IMDB Score",
+       subtitle = "By Decade Released",
+       x = "Gross Revenue \n(In Millions)",
+       y = "Difference Between MetaScore and IMDB Score",
+       color = "Decade Released")
+```
+Here, we plotted gross revenue against the difference in scores (MetaScore minus IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
+
+Gross Revenue and Certificate
+
+Gross Revenue and Decade Released
 
 ::: callout-important
 Before you submit, make sure your code chunks are turned off with `echo: false` and there are no warnings or messages with `warning: false` and `message: false` in the YAML.
