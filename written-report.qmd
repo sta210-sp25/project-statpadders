@@ -228,7 +228,7 @@ imdb_top_1000 %>%
   pivot_wider(names_from = Measure, values_from = Value)
 
 ```
-Exploring our numerical predictors, it seems that the distribution of gross revenue in millions of dollars seems to have a right skew, with most values being below \$500 million. It has a mean of \$78.514 million, median of \$34.850 million, standard deviation of about \$115 million, IQR of \$96.310, and a range of about \$937 million.
+Exploring our numerical predictors, it seems that the distribution of gross revenue in millions of dollars seems to have a right skew, with most values being below \$500 million. It has a mean of \$78.514 million, median of \$34.850 million, standard deviation of about \$115 million, IQR of \$96.310 million, and a range of about \$937 million.
 
 Run time seems fairly normal with a slight right skew. There is a potential outlier around 238 minutes. It has a mean of about 124 minutes, median of about 120 minutes, standard deviation of about 26 minutes, IQR of about 32 minutes, and a range of about 166 minutes.
 
