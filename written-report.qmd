@@ -238,8 +238,9 @@ Finally, number of votes has a right skew. With a potential outlier at about 2.3
 imdb_top_1000 %>% 
   ggplot(aes(x = decade)) +
   geom_bar() + labs(
+    title = "Distribution of Decades Released",
     x = "Decade Released",
-    y = "Frequency",
+    y = "Frequency"
   )
 
 ```
@@ -249,6 +250,7 @@ imdb_top_1000 %>%
   ggplot(aes(x = Certificate)) +
   geom_bar() +
    labs(
+     title = "Distribution of Censorship Certificates",
     x = "Certificate",
     y = "Frequency",
     fill = "Decade Released")
