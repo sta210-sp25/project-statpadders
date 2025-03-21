@@ -52,22 +52,24 @@ In summary the following is our primary research question: how do different vari
 Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects among Movie Ratings, Movie Revenues, and Viewer Satisfaction. Journal of Marketing, 74(1), 108-121. https://doi.org/10.1509/jmkg.74.1.108
 
 **Potential Predictors:**
-- Runtime (numerical)
 
-- Gross Revenue (numerical)
+-   Runtime (numerical)
 
-- Certificate (categorical)
+-   Gross Revenue (numerical)
 
-- Decade Released (categorical)
+-   Certificate (categorical)
 
-- Number of Votes (numerical)
+-   Decade Released (categorical)
 
-**Response Variables**
-- MetaScore (aggregate score of critics' ratings)
+-   Number of Votes (numerical)
 
-- IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
+**Response Variables**:
 
-- Difference (The quantity that the MetaScore differs from the IMDB score)
+-   IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
+
+-   MetaScore (aggregate score of critics' ratings)
+
+-   Difference (The quantity that the MetaScore differs from the IMDB score)
 
 # Exploratory Data Analysis
 
@@ -95,11 +97,12 @@ imdb_top_1000 <- imdb_top_1000 |>
                           Released_Year >= 2010 ~ "2010s",))
 ```
 
-Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight) For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.) This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
+Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
 
 Additionally, the variable `Runtime` listed the runtime of each observation as a string with the number of minutes followed by the word "mins." For example, a movie 90 minutes long would be listed as the string "90 mins" instead of the number 90. As such, this made `Runtime` a categorical variable. We changed this by removing the "mins" label and refactoring it as numeric, thus making the `Runtime` into a numerical variable.
 
 # Potential Multicollinearity
+
 ```{r}
 #| label: correlation matrix
 
@@ -170,9 +173,10 @@ imdb_top_1000 %>%
   separate(Statistic, into = c("Measure", "Variable"), sep = "_", extra = "merge") %>%
   pivot_wider(names_from = Measure, values_from = Value)
 ```
+
 As we can see from our response variables, scaled IMDB Score seems to be skewed right for these films, and scores tend to trend between 76 and 93. Both the mean score and median score are about 79, standard deviation of about 3, IQR of 4, and a range of 17.
 
-The distribution for MetaScore seems to be skewed right, with a mean of about 77, a median about 78, a standard deviation of about 12, an IQR of 16 and a range of 72. 
+The distribution for MetaScore seems to be skewed right, with a mean of about 77, a median about 78, a standard deviation of about 12, an IQR of 16 and a range of 72.
 
 Furthermore in terms of the `difference` between the two scores, it seems that the values are almost normally distributed, with a slight left skew. This suggests that it is nearly equally common for a MetaScore to be either higher or lower than the IMDB score, though slightly more often lower. There is an outlier when MetaScore is about 49 points lower than IMDB score (-49). The mean `difference` is when about MetaScore is about two points lower than IMDB score (-2) and median at 1 point lower (-1). There is standard deviation of 12 points, IQR of about 15 points, and a range of 70 points.
 
@@ -228,6 +232,7 @@ imdb_top_1000 %>%
   pivot_wider(names_from = Measure, values_from = Value)
 
 ```
+
 Exploring our numerical predictors, it seems that the distribution of gross revenue in millions of dollars seems to have a right skew, with most values being below \$500 million. It has a mean of \$78.514 million, median of \$34.850 million, standard deviation of about \$115 million, IQR of \$96.310 million, and a range of about \$937 million.
 
 Run time seems fairly normal with a slight right skew. There is a potential outlier around 238 minutes. It has a mean of about 124 minutes, median of about 120 minutes, standard deviation of about 26 minutes, IQR of about 32 minutes, and a range of about 166 minutes.
@@ -244,7 +249,9 @@ imdb_top_1000 %>%
   )
 
 ```
+
 The distribution of `decade` seems to be skewed left. This is expected, as newer films are more likely to have been added to the internet in real time after release whereas older films are added retroactively.
+
 ```{r}
 imdb_top_1000 %>% 
   ggplot(aes(x = Certificate)) +
@@ -255,6 +262,7 @@ imdb_top_1000 %>%
     y = "Frequency",
     fill = "Decade Released")
 ```
+
 The distribution of `certificates` does not exhibit much of a normal shape, but notably the highest distribution is of "U" movies - those with unrestricted audiences.
 
 # Bivariate EDA
@@ -360,8 +368,7 @@ p1 + p2 + p3 +
 
 ```
 
-Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
-
+Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time in minutes and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
 
 # Interaction Effects
 
@@ -387,7 +394,8 @@ imdb_top_1000 %>%
        y = "Difference Between MetaScore and IMDB Score",
        color = "Decade Released")
 ```
-Here, we plotted gross revenue against the difference in scores (MetaScore minus IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
+
+Here, we plotted gross revenue against the difference in scores (MetaScore minus scaled IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
 
 Gross Revenue and Certificate
 
