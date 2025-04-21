@@ -96,6 +96,7 @@ imdb_top_1000 <- imdb_top_1000 |>
       Certificate %in% c("R", "A") ~ "R",
       TRUE ~ "Other"),
       runtime_cent = scale(runtime, center = TRUE, scale = FALSE),
+      votes_cent = scale(no_votes_scaled, center = TRUE, scale = FALSE)
   )
 ```
 
@@ -172,7 +173,7 @@ We selected a logistic regression model for two primary reasons. First, none of 
 
 ```{r}
 imdb_reduced_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
-no_votes_scaled, data = imdb_top_1000,
+votes_cent, data = imdb_top_1000,
 family = "binomial")
 ```
 
@@ -182,13 +183,39 @@ anova(imdb_reduced_log, imdb_full_log, test = "Chisq") %>%
   kable(digits = 3)
 ```
 
-A drop-in-deviance test comparing a reduced model (excluding certificate and interaction terms) to a full model (including certificate and the gross × certificate interaction) yielded a statistically significant improvement in fit ($\chi^2$ = 19.648, df = 8, p = 0.012). This suggests that certificate and its interaction with gross earnings contribute meaningfully to predicting whether audience ratings exceed those of critics.
+A drop-in-deviance test comparing a reduced model (excluding certificate and interaction terms) to a full model (including certificate and the gross × certificate interaction) yielded a statistically significant improvement in fit ($\chi^2$ = 19.648, df = 8, p = 0.012). This suggests that certificate and its interaction with gross earnings contribute meaningfully to predicting whether audience ratings exceed those of critics. Additionally, the full model’s AIC is lower, which indicates a better balance between model complexity and goodness of fit.
+
+```{r}
+glance(imdb_full_log)
+glance(imdb_reduced_log)
+```
+
 
 # Results
 
+The final model we chose is our full model, fit with gross income and runtime mean-centered, decade, censorship certificate, number of votes and the interaction between gross and certificate. 
 
+```{r}
+tidy(imdb_full_log) %>% 
+  kable(digits = 3)
+```
+To address our research question, we fit a logistic regression model predicting the odds that a movie’s IMDb audience score exceeds its critic MetaScore. The final model included centered and scaled versions of gross revenue, runtime, and number of IMDB vores, as well as release decade, certificate rating, and an interaction term between gross revenue and certificate. A drop-in-deviance test confirmed that including certificate and its interaction with gross significantly improved model fit ($\chi^2$ = 19.648, df = 8, p = 0.012). The full model also had a lower AIC than the reduced model, indicating a more favorable balance between model complexity and fit.
 
-## Appendix
+Initial diagnostic checks did not reveal violations of key assumptions for logistic regression. No strong outliers or high-leverage points unduly influenced the model, and multicollinearity among predictors was low aside from expected correlations between variables involved in the interaction term.
+
+Interpretation of model coefficients reveals several noteworthy trends. For a baseline film from the 1930s with a G rating and average values for gross, runtime, and number of votes, the predicted odds that audience ratings are higher than critic ratings is, on average, approximately 0.024, or 2.4%.
+
+Runtime was not a statistically significant predictor (p = 0.586), though the odds ratio per unit increase is 1.002, suggesting a minimal practical effect. With every one minute increase in film runtime, the model estimates that the odds of higher audience ratings on IMDB multiply by 1.002 on average, holding all else constant.
+
+In contrast, gross revenue had a negative effect, which was significant (p = 0.010). This suggests that for G-rated films, higher gross earnings are associated with lower odds of audiences rating a movie more favorably than critics. For every $1 million increase in gross revenue, the model estimates on average that the odds of higher audience scores is multiplied by 0.996, or 99.6%. It is important to note that while it is a decrease, it is not a huge decrease, which is an interesting relationship.
+
+Release decade emerged as a strong predictor. Compared to films from the 1930s, those released from the 1970s through the 2010s had significantly higher odds of being rated better by audiences than critics, with odds increasing most notably in the 1990s and 2000s.
+
+Although the main effects of certificate categories were not significant, the interaction terms reveal that the relationship between gross revenue and audience-vs-critic rating divergence depends on a film’s rating. Specifically, for PG-rated and R-rated films, higher gross revenue is associated with a significantly greater chance that audiences prefer the film over critics (p = 0.004 and p = 0.006, respectively). This interaction suggests that commercially successful PG or R films are more likely to resonate with audiences than with critics.
+
+In summary, the model suggests that release decade, gross revenue, and its interaction with rating certificate are predictors in understanding when audiences are more favorable toward a film than critics. These results help contextualize the divergence in critical vs. popular reception and offer insights into the characteristics of films that perform better with general viewers.
+
+# Appendix
 
 To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher.
 Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
