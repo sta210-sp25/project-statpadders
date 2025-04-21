@@ -51,6 +51,7 @@ In summary the following is our primary research question: how do different vari
 
 Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects among Movie Ratings, Movie Revenues, and Viewer Satisfaction. Journal of Marketing, 74(1), 108-121. https://doi.org/10.1509/jmkg.74.1.108
 
+<<<<<<< Updated upstream
 **Potential Predictors:**
 
 -   Runtime (numerical)
@@ -69,6 +70,22 @@ Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects amon
 
 -   MetaScore (aggregate score of critics' ratings)
 
+=======
+**Potential Predictors:** - Runtime (numerical)
+
+-   Gross Revenue (numerical)
+
+-   Certificate (categorical)
+
+-   Decade Released (categorical)
+
+-   Number of Votes (numerical)
+
+**Response Variables** - MetaScore (aggregate score of critics' ratings)
+
+-   IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
+
+>>>>>>> Stashed changes
 -   Difference (The quantity that the MetaScore differs from the IMDB score)
 
 # Exploratory Data Analysis
@@ -364,11 +381,15 @@ p3 <- imdb_top_1000 %>%
   )
  
 p1 + p2 + p3 + 
-  plot_annotation('Film Gross vs. IMDB Score, MetaScore, and Score Difference')
+  plot_annotation('Run Time vs. IMDB Score, MetaScore, and Score Difference')
 
 ```
 
+<<<<<<< Updated upstream
 Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time in minutes and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
+=======
+Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
+>>>>>>> Stashed changes
 
 # Interaction Effects
 
@@ -395,7 +416,11 @@ imdb_top_1000 %>%
        color = "Decade Released")
 ```
 
+<<<<<<< Updated upstream
 Here, we plotted gross revenue against the difference in scores (MetaScore minus scaled IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
+=======
+Here, we plotted gross revenue against the difference in scores (MetaScore minus IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
+>>>>>>> Stashed changes
 
 Gross Revenue and Certificate
 
