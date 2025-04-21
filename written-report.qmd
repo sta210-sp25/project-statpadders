@@ -25,40 +25,33 @@ imdb_top_1000 <- read_csv("data/imdb_top_1000.csv") |>
 
 # Introduction
 
-The proliferation of online review platforms has significantly influenced consumer decision-making across various industries, but particularly in entertainment. In the film industry, consumers rely on both professional critics and amateur audiences to gauge the quality of movies before making viewing decisions (Moon, Bergey, & Iacobucci, 2010). While professional critics evaluate films based on artistic and technical merit, amateur audiences may assess them based on personal enjoyment, accessibility, and entertainment value. This dual review system has created a dynamic where movies may receive different evaluations from critics and general audiences, raising questions about the relationship between the two and the factors influencing their divergence. Given this context, our research seeks to address the following question: What factors in a film influence IMDb user ratings and critic MetaScores; how do differences in these scores relate to movie characteristics such as gross earnings, number of votes, decade released, runtime, and certificate?
+Online review platforms have transformed how audiences evaluate and choose movies. Between professional critics and everyday viewers, these platforms host a broad spectrum of opinions that increasingly shape the trajectory of films, from box office performance to streaming recommendations. However, these two groups often evaluate films through very different lenses: critics tend to emphasize artistic merit, narrative structure, and technical execution, while audiences may prioritize entertainment, emotional resonance, and accessibility. As a result, it is commonplace for a film to receive mixed signals across platforms. A film may be highly rated by audiences but poorly reviewed by critics, or vice versa.
+
+This divergence can be confusing for consumers, who must navigate these conflicting assessments to make viewing decisions. For example, a film might thrive on word-of-mouth and accumulate high audience ratings on IMDb but perform poorly with critics or fail to receive awards recognition.
 
 **Motivation and Importance**
 
-Understanding the discrepancies between audience and critic ratings is critical for multiple stakeholders in the film industry. For movie studios and marketers, aligning promotional strategies with audience preferences while maintaining critical appeal can be a determinant of box office success and long-term profitability (Moon, Bergey, & Iacobucci, 2010). Platforms like Netflix and IMDb utilize rating-based recommendation systems to enhance user satisfaction and engagement, making it essential to refine these systems based on nuanced insights into rating behaviors. Moreover, prior research suggests that word-of-mouth (WOM) effects can sustain movie revenues over time, with online user ratings playing a crucial role in influencing later viewership trends. Understanding these dynamics is essential for optimizing film production, marketing investments, and recommendation algorithms in an era where consumer feedback is widely accessible and highly influential.
+Understanding these differences is essential not just for filmgoers but also for industry stakeholders. Movie studios, marketers, and streaming platforms rely on both critical acclaim and mass appeal to determine promotional strategies, content investments, and recommendation algorithms. Prior research has shown that user-driven ratings have powerful word-of-mouth effects, often extending a film’s relevance and commercial success (Moon, Bergey, Iacobucci, 2010). Further, the typical consumer does not evaluate films with the same lens or criteria as professional critics.
 
-**Hypotheses and Theoretical Considerations**
+By analyzing these patterns, we aim to identify the film characteristics, such as decade of release, runtime, gross earnings, and censorship rating, that are most predictive of audiences liking a film more than critics. These insights have direct implications for consumer behavior research, content recommendation systems, and media marketing strategies in an increasingly data-driven entertainment landscape.
 
-We propose several key hypotheses regarding the divergence between IMDb ratings (representing audience scores) and critic MetaScores:
+Given the observed divergence between critic and audience evaluations, we pose the following research question:
 
-**The Effect of Gross Earnings and Number of Votes**
+What factors contribute to audiences liking a movie more than critics, and how can we use these factors to predict the likelihood of a film performing better with audiences than critics?
 
-Are movies with higher gross earnings and a greater number of votes more likely to have higher IMDb ratings due to their broad audience reach, (while critics may evaluate them more critically, leading to a potential divergence in scores)? Conversely, could lower-grossing films receive higher MetaScores due to stronger artistic value but may not resonate as widely with general audiences, leading to lower IMDb ratings?
+In this study, we focus on modeling the odds that audience scores exceed critic scores. By doing so, we shift attention from understanding average film quality to identifying conditions that foster fan-favorite films — those that resonate with general audiences even when they fail to win over the critics.
 
-**Impact of Decade Released and Runtime**
+#Data
 
-Could older movies have higher MetaScores due to their established reputation and critical re-evaluation over time, while IMDb ratings could fluctuate based on contemporary audience preferences? What about runtime? Could longer runtime movies receive higher MetaScores as they are often associated with more complex storytelling, while audiences may rate them lower due to attention-span and pacing concerns?
+In cleaning our data, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between IMDB Score and MetaScore, scaled so that they can be compared. A negative value indicates that the audience score is lower than that of critics, and positive is vice versa. Because our dataset includes older and international films with various outdated or uncommon censorship ratings, we consolidated certificates into modern, widely recognizable categories: G, PG, PG-13, R, and Other, based on their closest equivalents in the current U.S. rating system.
 
-**The Role of Certificate (Censorship Rating)**
-
-R-rated movies may receive higher IMDb ratings due to mature content attracting a dedicated audience, whereas critics may assess them more rigorously depending on the execution of themes. Family-friendly movies may receive higher MetaScores due to broader accessibility but could have lower IMDb ratings if audiences find them less engaging compared to other categories. By investigating these hypotheses using this dataset that includes IMDb ratings, critic MetaScores, and various film characteristics, this study aims to provide a comprehensive analysis of the factors influencing rating discrepancies. Ultimately, our findings will offer valuable insights into how different audience segments perceive film quality, with implications for movie marketing, recommendation algorithms, and consumer behavior in the digital entertainment landscape.
-
-In summary the following is our primary research question: how do different variable predictors in genre, censorship, runtime, and gross earnings predict how critics and fans will rate movies comparatively?
-
-Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects among Movie Ratings, Movie Revenues, and Viewer Satisfaction. Journal of Marketing, 74(1), 108-121. https://doi.org/10.1509/jmkg.74.1.108
-
-<<<<<<< Updated upstream
-**Potential Predictors:**
+**Predictors:**
 
 -   Runtime (numerical)
 
 -   Gross Revenue (numerical)
 
--   Certificate (categorical)
+-   Censorship Certificate (categorical)
 
 -   Decade Released (categorical)
 
@@ -66,40 +59,20 @@ Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects amon
 
 **Response Variables**:
 
--   IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
+-   Difference: *The quantity that the MetaScore (aggregate score of critics' ratings) differs from the IMDB score (score given by audience/fans on IMDB, scaled to match MetaScore)*
 
--   MetaScore (aggregate score of critics' ratings)
 
-=======
-**Potential Predictors:** - Runtime (numerical)
-
--   Gross Revenue (numerical)
-
--   Certificate (categorical)
-
--   Decade Released (categorical)
-
--   Number of Votes (numerical)
-
-**Response Variables** - MetaScore (aggregate score of critics' ratings)
-
--   IMDB Score (score given by audience/fans on IMDB, scaled to match MetaScore)
-
->>>>>>> Stashed changes
--   Difference (The quantity that the MetaScore differs from the IMDB score)
-
-# Exploratory Data Analysis
-
-To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher.
 
 ```{r}
 imdb_top_1000 <- imdb_top_1000 |>
   mutate(no_votes_scaled = No_of_Votes / 10^6,
          gross_scaled = Gross / 10^6,
+         gross_cent = scale(gross_scaled, center = TRUE, scale = FALSE),
          IMDB_scaled = IMDB_Rating *10,
          Released_Year = if_else(Series_Title == "Apollo 13", "1995", 
                                  Released_Year),
-         difference = Meta_score - IMDB_scaled,
+         difference = IMDB_scaled - Meta_score,
+         difference_binary = factor(if_else(difference > 0, 1, 0)),
          runtime = as.numeric(str_remove(Runtime, " min")),
          Released_Year = as.numeric(Released_Year),
          decade = case_when(Released_Year < 1940 ~ "1930s", 
@@ -111,14 +84,16 @@ imdb_top_1000 <- imdb_top_1000 |>
                           Released_Year >= 1980 & Released_Year < 1990 ~ "1980s",
                           Released_Year >= 1990 & Released_Year < 2000 ~ "1990s",
                           Released_Year >= 2000 & Released_Year < 2010 ~ "2000s",
-                          Released_Year >= 2010 ~ "2010s",))
+                          Released_Year >= 2010 ~ "2010s",),
+         certificate = case_when(
+      Certificate %in% c("G", "U", "APPROVED", "PASSED") ~ "G",
+      Certificate %in% c("PG", "TV-PG", "GP", "UA", "U/A") ~ "PG",
+      Certificate %in% c("PG-13") ~ "PG-13",
+      Certificate %in% c("R", "A") ~ "R",
+      TRUE ~ "Other"),
+      runtime_cent = scale(runtime, center = TRUE, scale = FALSE),
+  )
 ```
-
-Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
-
-Additionally, the variable `Runtime` listed the runtime of each observation as a string with the number of minutes followed by the word "mins." For example, a movie 90 minutes long would be listed as the string "90 mins" instead of the number 90. As such, this made `Runtime` a categorical variable. We changed this by removing the "mins" label and refactoring it as numeric, thus making the `Runtime` into a numerical variable.
-
-# Potential Multicollinearity
 
 ```{r}
 #| label: correlation matrix
@@ -131,8 +106,24 @@ matrix <- imdb_top_1000 %>%
 c <- cor(matrix)
 corrplot(c, method = "number")
 ```
+We used a correlation matrix to check for multicollinearity. As expected, difference is highly correlated with `IMDB_scaled` and `meta_score`, since it’s derived from them. IMDB_scaled and no_votes_scaled also show strong correlation (0.62), so we avoid including both in the same model.
 
-Here, we created a correlation matrix to see which of our numerical predictors may be highly correlated, thus indicating potential multicollinearity. There is high correlation (0.97 correlation coefficient) between the variable `difference` and the variables `IMDB_scaled` and `meta_score`, but that is to be expected - the `difference` variable is mutated from both of those variables, to show the difference between them. `IMDB_scaled` and `no_votes_scaled` are also highly correlated with a coefficient of 0.62, but that is also to be expected - of course the votes on IMDB are correlated with an IMDB score. We would not fit a model with both of those variables.
+
+
+
+
+
+
+
+
+
+
+## Appendix
+
+To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher.
+Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
+
+Additionally, the variable `Runtime` listed the runtime of each observation as a string with the number of minutes followed by the word "mins." For example, a movie 90 minutes long would be listed as the string "90 mins" instead of the number 90. As such, this made `Runtime` a categorical variable. We changed this by removing the "mins" label and refactoring it as numeric, thus making the `Runtime` into a numerical variable.
 
 # Univariate EDA
 
@@ -385,11 +376,9 @@ p1 + p2 + p3 +
 
 ```
 
-<<<<<<< Updated upstream
+
 Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time in minutes and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
-=======
-Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
->>>>>>> Stashed changes
+
 
 # Interaction Effects
 
@@ -405,6 +394,7 @@ imdb_top_1000 %>%
 ```
 
 ```{r}
+#| label: interaction
 imdb_top_1000 %>% 
   ggplot(aes(x = gross_scaled, y = difference, color = decade)) +
   geom_point() +
@@ -416,11 +406,8 @@ imdb_top_1000 %>%
        color = "Decade Released")
 ```
 
-<<<<<<< Updated upstream
+
 Here, we plotted gross revenue against the difference in scores (MetaScore minus scaled IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
-=======
-Here, we plotted gross revenue against the difference in scores (MetaScore minus IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
->>>>>>> Stashed changes
 
 Gross Revenue and Certificate
 
@@ -431,5 +418,16 @@ Before you submit, make sure your code chunks are turned off with `echo: false` 
 :::
 
 ```{r}
+#| label: models
 
+imdb_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
+certificate + no_votes_scaled,
+data = imdb_top_1000, family = "binomial")
+
+tidy(imdb_log)
 ```
+
+
+
+
+Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects among Movie Ratings, Movie Revenues, and Viewer Satisfaction. Journal of Marketing, 74(1), 108-121. https://doi.org/10.1509/jmkg.74.1.108
