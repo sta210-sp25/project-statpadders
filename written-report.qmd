@@ -18,7 +18,11 @@ library(tidymodels)
 library(dplyr)
 library(patchwork)
 library(corrplot)
-
+library(openintro)
+library(knitr)
+library(kableExtra)  # for table embellishments
+library(Stat2Data)
+library(broom)
 imdb_top_1000 <- read_csv("data/imdb_top_1000.csv") |>
   drop_na()
 ```
@@ -41,7 +45,7 @@ What factors contribute to audiences liking a movie more than critics, and how c
 
 In this study, we focus on modeling the odds that audience scores exceed critic scores. By doing so, we shift attention from understanding average film quality to identifying conditions that foster fan-favorite films — those that resonate with general audiences even when they fail to win over the critics.
 
-#Data
+# Data
 
 In cleaning our data, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between IMDB Score and MetaScore, scaled so that they can be compared. A negative value indicates that the audience score is lower than that of critics, and positive is vice versa. Because our dataset includes older and international films with various outdated or uncommon censorship ratings, we consolidated certificates into modern, widely recognizable categories: G, PG, PG-13, R, and Other, based on their closest equivalents in the current U.S. rating system.
 
@@ -109,12 +113,78 @@ corrplot(c, method = "number")
 We used a correlation matrix to check for multicollinearity. As expected, difference is highly correlated with `IMDB_scaled` and `meta_score`, since it’s derived from them. IMDB_scaled and no_votes_scaled also show strong correlation (0.62), so we avoid including both in the same model.
 
 
+```{r}
+#| label: response-eda
+imdb_top_1000 %>% 
+  ggplot(aes(x = difference )) +
+  geom_histogram() +
+   labs(
+    x = "Difference Between \nIMDB and Meta Score",
+    y = "Frequency"
+  )
+```
+```{r}
+#| label: num-predictor-eda
 
+library(patchwork)
+p1 <- imdb_top_1000 %>% 
+  ggplot(aes(x = gross_scaled, y = difference )) +
+  geom_point() + labs(
+    x = "Film Gross \n(in Millions)",
+    y = "Difference Between IMDB and Critic Scores"
+  )
+p2 <- imdb_top_1000 %>% 
+  ggplot(aes(x = runtime, y = difference)) +
+  geom_point() +
+   labs(
+    x = "Film Runtime \n(in Minutes)",
+    y = "Difference Between IMDB and Critic Scores"
+   )
 
+p3 <- imdb_top_1000 %>% 
+  
+  ggplot(aes(x = no_votes_scaled, y = difference )) +
+  geom_point() + labs(
+    x = "Number of Votes on IMDB \n(in Millions)",
+    y = "Difference Between IMDB and Critic Scores"
+  )
+p1 + p2 + p3 + 
+  plot_annotation('Film Gross, Runtime, and IMDB Votes, vs. Score Difference')
+```
 
+In terms of the `difference` between the two scores, it seems that the values are almost normally distributed, with a slight left skew. This suggests that it is nearly equally common for a IMDB Score to be either higher or lower than the MetaScore score, though slightly more often lower.
 
+Additionally, when plotting our numerical predictors, there appear to be no linear relationships between each predictor and our response.
 
+# Methodology
 
+```{r}
+#| label: models
+
+imdb_full_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
+certificate + no_votes_scaled + gross_cent * certificate,
+data = imdb_top_1000, family = "binomial")
+
+tidy(imdb_full_log)
+```
+
+We selected a logistic regression model for two primary reasons. First, none of the numerical predictors exhibited a clear linear relationship with the response variable difference. Second, our goal was to model the odds that audience scores exceed those of critics. In our initial model, most levels of the certificate variable were not statistically significant. Additionally, although we hypothesized an interaction effect between gross revenue and censorship rating, the corresponding interaction terms were not significant and thus were excluded from the next model tested.
+
+```{r}
+imdb_reduced_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
+no_votes_scaled, data = imdb_top_1000,
+family = "binomial")
+```
+
+```{r}
+anova(imdb_reduced_log, imdb_full_log, test = "Chisq") %>% 
+  tidy() %>% 
+  kable(digits = 3)
+```
+
+A drop-in-deviance test comparing a reduced model (excluding certificate and interaction terms) to a full model (including certificate and the gross × certificate interaction) yielded a statistically significant improvement in fit ($\chi^2$ = 19.648, df = 8, p = 0.012). This suggests that certificate and its interaction with gross earnings contribute meaningfully to predicting whether audience ratings exceed those of critics.
+
+# Results
 
 
 
@@ -384,7 +454,7 @@ Similar to our gross predictor, a clear linear relationship does not seem to app
 
 ```{r}
 imdb_top_1000 %>% 
-  ggplot(aes(x = gross_scaled, y = difference, color = Certificate)) +
+  ggplot(aes(x = gross_cent, y = difference, color = certificate)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   labs(title = "Gross Revenue vs Difference between MetaScore \nand IMDB Score",
@@ -417,15 +487,7 @@ Gross Revenue and Decade Released
 Before you submit, make sure your code chunks are turned off with `echo: false` and there are no warnings or messages with `warning: false` and `message: false` in the YAML.
 :::
 
-```{r}
-#| label: models
 
-imdb_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
-certificate + no_votes_scaled,
-data = imdb_top_1000, family = "binomial")
-
-tidy(imdb_log)
-```
 
 
 
