@@ -43,7 +43,7 @@ Given the observed divergence between critic and audience evaluations, we pose t
 
 What factors contribute to audiences liking a movie more than critics, and how can we use these factors to predict the likelihood of a film performing better with audiences than critics?
 
-In this study, we focus on modeling the odds that audience scores exceed critic scores. By doing so, we shift attention from understanding average film quality to identifying conditions that foster fan-favorite films — those that resonate with general audiences even when they fail to win over the critics.
+In this study, we focus on modeling the odds that audience scores exceed critic scores. By doing so, we shift attention from understanding average film quality to identifying conditions that foster fan-favorite films and resonate with general audiences even when they fail to win over the critics.
 
 # Data
 
@@ -63,9 +63,7 @@ In cleaning our data, we first had to deal with the NA values in our data. Some 
 
 **Response Variables**:
 
--   Difference: *The quantity that the MetaScore (aggregate score of critics' ratings) differs from the IMDB score (score given by audience/fans on IMDB, scaled to match MetaScore)*
-
-
+-   Difference: *The quantity that the IMDB score (score given by audience/fans on IMDB, scaled to match MetaScore) differs from the MetaScore (aggregate score of critics' ratings)*
 
 ```{r}
 imdb_top_1000 <- imdb_top_1000 |>
@@ -111,8 +109,8 @@ matrix <- imdb_top_1000 %>%
 c <- cor(matrix)
 corrplot(c, method = "number")
 ```
-We used a correlation matrix to check for multicollinearity. As expected, difference is highly correlated with `IMDB_scaled` and `meta_score`, since it’s derived from them. IMDB_scaled and no_votes_scaled also show strong correlation (0.62), so we avoid including both in the same model.
 
+We used a correlation matrix to check for multicollinearity. As expected, difference is highly correlated with `IMDB_scaled` and `meta_score`, since it’s derived from them. IMDB_scaled and no_votes_scaled also show strong correlation (0.62), so we avoid including both in the same model.
 
 ```{r}
 #| label: response-eda
@@ -124,6 +122,7 @@ imdb_top_1000 %>%
     y = "Frequency"
   )
 ```
+
 ```{r}
 #| label: num-predictor-eda
 
@@ -190,16 +189,15 @@ glance(imdb_full_log)
 glance(imdb_reduced_log)
 ```
 
-
 # Results
 
-The final model we chose is our full model, fit with gross income and runtime mean-centered, decade, censorship certificate, number of votes and the interaction between gross and certificate. 
 
 ```{r}
 tidy(imdb_full_log) %>% 
   kable(digits = 3)
 ```
-To address our research question, we fit a logistic regression model predicting the odds that a movie’s IMDb audience score exceeds its critic MetaScore. The final model included centered and scaled versions of gross revenue, runtime, and number of IMDB vores, as well as release decade, certificate rating, and an interaction term between gross revenue and certificate. A drop-in-deviance test confirmed that including certificate and its interaction with gross significantly improved model fit ($\chi^2$ = 19.648, df = 8, p = 0.012). The full model also had a lower AIC than the reduced model, indicating a more favorable balance between model complexity and fit.
+
+To address our research question, the final model we fit is this full logistic regression model predicting the odds that a movie’s IMDb audience score exceeds its critic MetaScore. The final model included centered and scaled versions of gross revenue, runtime, and number of IMDB votes, as well as release decade, certificate rating, and an interaction term between gross revenue and certificate. A drop-in-deviance test confirmed that including certificate and its interaction with gross significantly improved model fit ($\chi^2$ = 19.648, df = 8, p = 0.012). The full model also had a lower AIC than the reduced model, indicating a more favorable balance between model complexity and fit.
 
 Initial diagnostic checks did not reveal violations of key assumptions for logistic regression. No strong outliers or high-leverage points unduly influenced the model, and multicollinearity among predictors was low aside from expected correlations between variables involved in the interaction term.
 
@@ -207,7 +205,7 @@ Interpretation of model coefficients reveals several noteworthy trends. For a ba
 
 Runtime was not a statistically significant predictor (p = 0.586), though the odds ratio per unit increase is 1.002, suggesting a minimal practical effect. With every one minute increase in film runtime, the model estimates that the odds of higher audience ratings on IMDB multiply by 1.002 on average, holding all else constant.
 
-In contrast, gross revenue had a negative effect, which was significant (p = 0.010). This suggests that for G-rated films, higher gross earnings are associated with lower odds of audiences rating a movie more favorably than critics. For every $1 million increase in gross revenue, the model estimates on average that the odds of higher audience scores is multiplied by 0.996, or 99.6%. It is important to note that while it is a decrease, it is not a huge decrease, which is an interesting relationship.
+In contrast, gross revenue had a negative effect, which was significant (p = 0.010). This suggests that for G-rated films, higher gross earnings are associated with lower odds of audiences rating a movie more favorably than critics. For every \$1 million increase in gross revenue, the model estimates on average that the odds of higher audience scores is multiplied by 0.996, or 99.6%. It is important to note that while it is a decrease, it is not a huge decrease, which is an interesting relationship.
 
 Release decade emerged as a strong predictor. Compared to films from the 1930s, those released from the 1970s through the 2010s had significantly higher odds of being rated better by audiences than critics, with odds increasing most notably in the 1990s and 2000s.
 
@@ -215,10 +213,11 @@ Although the main effects of certificate categories were not significant, the in
 
 In summary, the model suggests that release decade, gross revenue, and its interaction with rating certificate are predictors in understanding when audiences are more favorable toward a film than critics. These results help contextualize the divergence in critical vs. popular reception and offer insights into the characteristics of films that perform better with general viewers.
 
+\pagebreak
+
 # Appendix
 
-To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher.
-Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
+To begin our EDA, we first had to deal with the NA values in our data. Some observations had NA values in their Gross Revenues. After examining these observations, there were no discernible patterns or connections between the NA values; they were random. As such, we were able to drop these values without compromising our data set or losing important observations. We also created the variable `difference`, whose value indicates the difference between MetaScore and IMDB Score, scaled so that they can be compared. A negative value indicates that the MetaScore is lower than IMDB Score, and a positive value indicates that it is higher. Further, we turned our year predictor into a categorical variable by creating a new variable: `decade`. Since there is a very wide range of values in `Released_Year` for the movies selected, that variable itself is not particularly useful for our analysis. Not many observations even had the same released year, and the differences between one unit in that variable were arbitrary for some movies (for example a movie released in 1966 vs 1967 does not give much insight). For data cleaning and to improve clarity and interpretability, we changed this variable into a categorical variable `decade`, where all of the years released are grouped into decades (i.e. 1950s, 1960s, etc.). This categorical approach gives better interpretability; grouping movies into decades creates a better identifier than simply using individual years.
 
 Additionally, the variable `Runtime` listed the runtime of each observation as a string with the number of minutes followed by the word "mins." For example, a movie 90 minutes long would be listed as the string "90 mins" instead of the number 90. As such, this made `Runtime` a categorical variable. We changed this by removing the "mins" label and refactoring it as numeric, thus making the `Runtime` into a numerical variable.
 
@@ -473,9 +472,7 @@ p1 + p2 + p3 +
 
 ```
 
-
 Similar to our gross predictor, a clear linear relationship does not seem to appear between film's run time in minutes and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation here as well that gives us a promising model.
-
 
 # Interaction Effects
 
@@ -503,7 +500,6 @@ imdb_top_1000 %>%
        color = "Decade Released")
 ```
 
-
 Here, we plotted gross revenue against the difference in scores (MetaScore minus scaled IMDB score) to examine how these variables interact against our categorical variables. The visualizations reveal clear interaction effects in two key relationships:
 
 Gross Revenue and Certificate
@@ -513,10 +509,5 @@ Gross Revenue and Decade Released
 ::: callout-important
 Before you submit, make sure your code chunks are turned off with `echo: false` and there are no warnings or messages with `warning: false` and `message: false` in the YAML.
 :::
-
-
-
-
-
 
 Reference: Moon, S., Bergey, P. K., & Iacobucci, D. (2010). Dynamic Effects among Movie Ratings, Movie Revenues, and Viewer Satisfaction. Journal of Marketing, 74(1), 108-121. https://doi.org/10.1509/jmkg.74.1.108
