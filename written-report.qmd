@@ -23,6 +23,7 @@ library(knitr)
 library(kableExtra)  # for table embellishments
 library(Stat2Data)
 library(broom)
+library(yardstick)
 imdb_top_1000 <- read_csv("data/imdb_top_1000.csv") |>
   drop_na()
 ```
@@ -174,11 +175,11 @@ certificate + votes_cent + gross_cent * certificate,
 data = imdb_top_1000, family = "binomial")
 
 #imdb_linear <- lm(difference ~ gross_cent + runtime_cent + decade + certificate
-                  + no_votes_scaled + gross_cent*certificate, data = 
-                    imdb_top_1000)
+     #             + no_votes_scaled + gross_cent*certificate, data = 
+      #              imdb_top_1000)
 
 #imdb_linear_no_cert <- lm(difference ~ gross_cent + runtime_cent + decade, data = 
-                    imdb_top_1000)
+       #             imdb_top_1000)
 
 tidy(imdb_linear)
 tidy(imdb_full_log)
@@ -187,8 +188,8 @@ glance(imdb_linear) %>%
   select(adj.r.squared)
 
 
-glance(imdb_linear_no_cert) %>% 
-  select(adj.r.squared)
+#glance(imdb_linear_no_cert) %>% 
+ # select(adj.r.squared)
 ```
 
 We selected a logistic regression model for two primary reasons. First, none of the numerical predictors exhibited a clear linear relationship with the response variable difference. Second, our goal was to model the odds that audience scores exceed those of critics. In our initial model, most levels of the certificate variable were not statistically significant. Additionally, although we hypothesized an interaction effect between gross revenue and censorship rating, the corresponding interaction terms were not significant and thus were excluded from the next model tested.
@@ -236,6 +237,52 @@ glance(imdb_log_noCert)
 tidy(imdb_full_log) %>% 
   kable(digits = 3)
 ```
+
+```{r}
+#| label: confusion-matrix
+#| 
+library(yardstick)
+library(dplyr)
+library(ggplot2)
+
+predictions <- imdb_top_1000 %>%
+  mutate(
+    .pred_1 = predict(imdb_full_log, newdata = imdb_top_1000, type = "response"),  # NAME THIS .pred_1 !!!
+    pred_class = factor(if_else(.pred_1 > 0.3, "1", "0")),
+    difference_binary = factor(difference_binary)
+  )
+
+# Step 2: Confusion matrix (optional)
+conf_mat(predictions, truth = difference_binary, estimate = pred_class) |>
+  autoplot(type = "heatmap")
+
+
+# Step 3: ROC Curve Data
+roc_curve_data <- roc_curve(predictions, truth = difference_binary, .pred_1)
+
+# Step 4: Plot ROC Curve
+autoplot(roc_curve_data) +
+  ggtitle("ROC Curve for Predicting Audience vs Critic Rating Divergence")
+
+# Step 5: Calculate AUC
+roc_auc(predictions, truth = difference_binary, .pred_1)
+
+# If you want even more detail:
+classification_metrics <- predictions %>%
+  metrics(truth = difference_binary, estimate = pred_class) %>%
+  bind_rows(
+    recall(predictions, truth = difference_binary, estimate = pred_class),
+    precision(predictions, truth = difference_binary, estimate = pred_class),
+    specificity(predictions, truth = difference_binary, estimate = pred_class)
+  )
+
+classification_metrics
+
+```
+
+
+
+
 
 To address our research question, the final model we fit is this full logistic regression model predicting the odds that a movie’s IMDb audience score exceeds its critic MetaScore. The final model included centered and scaled versions of gross revenue, runtime, and number of IMDB votes, as well as release decade, certificate rating, and an interaction term between gross revenue and certificate. A drop-in-deviance test confirmed that including certificate and its interaction with gross significantly improved model fit ($\chi^2$ = 19.648, df = 8, p = 0.012). The full model also had a lower AIC than the reduced model, indicating a more favorable balance between model complexity and fit.
 
