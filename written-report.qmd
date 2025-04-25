@@ -74,7 +74,7 @@ imdb_top_1000 <- imdb_top_1000 |>
          Released_Year = if_else(Series_Title == "Apollo 13", "1995", 
                                  Released_Year),
          difference = IMDB_scaled - Meta_score,
-         difference_binary = factor(if_else(difference > 0, 1, 0)),
+         difference_binary = factor(if_else(difference < -13 | difference > 9 , 1, 0)),
          runtime = as.numeric(str_remove(Runtime, " min")),
          Released_Year = as.numeric(Released_Year),
          decade = case_when(Released_Year < 1940 ~ "1930s", 
@@ -94,8 +94,12 @@ imdb_top_1000 <- imdb_top_1000 |>
       Certificate %in% c("R", "A") ~ "R",
       TRUE ~ "Other"),
       runtime_cent = scale(runtime, center = TRUE, scale = FALSE),
-      votes_cent = scale(no_votes_scaled, center = TRUE, scale = FALSE)
+      votes_cent = scale(no_votes_scaled, center = TRUE, scale = FALSE),
+      
   )
+
+imdb_top_1000 <- imdb_top_1000 %>% 
+  filter(!(decade %in% c("1930s", "1940s")))
 ```
 
 ```{r}
@@ -161,23 +165,58 @@ Additionally, when plotting our numerical predictors, there appear to be no line
 ```{r}
 #| label: models
 
+imdb_linear <- lm(difference ~ gross_cent + runtime_cent + decade + certificate
+                  + no_votes_scaled + gross_cent*certificate, data = 
+                    imdb_top_1000)
+
 imdb_full_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
-certificate + no_votes_scaled + gross_cent * certificate,
+certificate + votes_cent + gross_cent * certificate,
 data = imdb_top_1000, family = "binomial")
 
+#imdb_linear <- lm(difference ~ gross_cent + runtime_cent + decade + certificate
+                  + no_votes_scaled + gross_cent*certificate, data = 
+                    imdb_top_1000)
+
+#imdb_linear_no_cert <- lm(difference ~ gross_cent + runtime_cent + decade, data = 
+                    imdb_top_1000)
+
+tidy(imdb_linear)
 tidy(imdb_full_log)
+
+glance(imdb_linear) %>%
+  select(adj.r.squared)
+
+
+glance(imdb_linear_no_cert) %>% 
+  select(adj.r.squared)
 ```
 
 We selected a logistic regression model for two primary reasons. First, none of the numerical predictors exhibited a clear linear relationship with the response variable difference. Second, our goal was to model the odds that audience scores exceed those of critics. In our initial model, most levels of the certificate variable were not statistically significant. Additionally, although we hypothesized an interaction effect between gross revenue and censorship rating, the corresponding interaction terms were not significant and thus were excluded from the next model tested.
 
 ```{r}
-imdb_reduced_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade +
+#just getting rid of certificate interaction
+imdb_reduced_log <- glm(difference_binary ~ gross_cent + runtime_cent + decade + certificate +
 votes_cent, data = imdb_top_1000,
 family = "binomial")
+
+#getting rid of certificate altogether
+imdb_log_noCert <- glm(difference_binary ~ gross_cent + runtime_cent + decade + 
+votes_cent, data = imdb_top_1000,
+family = "binomial")
+
+tidy(imdb_reduced_log)
+tidy(imdb_log_noCert)
+
+
 ```
 
 ```{r}
 anova(imdb_reduced_log, imdb_full_log, test = "Chisq") %>% 
+  tidy() %>% 
+  kable(digits = 3)
+
+#with certificate and interaction vs. no certificate
+anova(imdb_log_noCert, imdb_full_log, test = "Chisq") %>% 
   tidy() %>% 
   kable(digits = 3)
 ```
@@ -186,7 +225,8 @@ A drop-in-deviance test comparing a reduced model (excluding certificate and int
 
 ```{r}
 glance(imdb_full_log)
-glance(imdb_reduced_log)
+glance(imdb_log_noCert)
+#glance(imdb_reduced_log)
 ```
 
 # Results
