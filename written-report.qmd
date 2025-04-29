@@ -1,6 +1,6 @@
 ---
 title: "Statpadders"
-author: "Toma Shigaki-Than, CJ Frederickson, Camden Reeves, Sam Kakarla"
+author: "Toma Shigaki-Than, CJ Frederickson, Camden Reeves"
 date: "March 17, 2025"
 format: pdf
 execute: 
