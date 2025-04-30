@@ -594,6 +594,7 @@ Similar to our gross predictor, a clear linear relationship does not seem to app
 # Interaction Effects
 
 ```{r}
+#| label: interaction-centered
 imdb_top_1000 %>% 
   #| label: interaction
   ggplot(aes(x = gross_cent, y = difference, color = certificate)) +
