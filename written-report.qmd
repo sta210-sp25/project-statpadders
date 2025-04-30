@@ -307,6 +307,7 @@ Our analysis aimed to identify film characteristics associated with significant 
 # Appendix
 
 ```{r}
+#| label: output final model
 tidy(imdb_log_noCert)
 ```
 
@@ -331,6 +332,7 @@ corrplot(c, method = "number")
 # Univariate EDA
 
 ```{r}
+#| label: response eda
 p1 <- imdb_top_1000 %>% 
   ggplot(aes(x = IMDB_scaled )) +
   geom_histogram() + 
@@ -392,6 +394,7 @@ The distribution for MetaScore seems to be skewed right, with a mean of about 77
 Furthermore in terms of the `difference` between the two scores, it seems that the values are almost normally distributed, with a slight left skew. This suggests that it is nearly equally common for a MetaScore to be either higher or lower than the IMDB score, though slightly more often lower. There is an outlier when MetaScore is about 49 points lower than IMDB score (-49). The mean `difference` is when about MetaScore is about two points lower than IMDB score (-2) and median at 1 point lower (-1). There is standard deviation of 12 points, IQR of about 15 points, and a range of 70 points.
 
 ```{r}
+#| label: numerical eda
 p1 <- imdb_top_1000 %>% 
   ggplot(aes(x = gross_scaled)) +
   geom_histogram() + labs(
@@ -451,6 +454,7 @@ Run time seems fairly normal with a slight right skew. There is a potential outl
 Finally, number of votes has a right skew. With a potential outlier at about 2.34 million votes, it has a mean of about 356,000 votes, median of about 267,000 votes, standard deviation of about 354,000 votes, IQR of about 412,000 votes, and a range of about 2.32 million votes.
 
 ```{r}
+#| label: decade distribution
 imdb_top_1000 %>% 
   ggplot(aes(x = decade)) +
   geom_bar() + labs(
@@ -464,6 +468,7 @@ imdb_top_1000 %>%
 The distribution of `decade` seems to be skewed left. This is expected, as newer films are more likely to have been added to the internet in real time after release whereas older films are added retroactively.
 
 ```{r}
+#| label: certificate distribution
 imdb_top_1000 %>% 
   ggplot(aes(x = Certificate)) +
   geom_bar() +
@@ -479,6 +484,7 @@ The distribution of `certificates` does not exhibit much of a normal shape, but 
 # Bivariate EDA
 
 ```{r}
+#| label: gross scaled vs responses
 library(patchwork)
 p1 <- imdb_top_1000 %>% 
   ggplot(aes(x = gross_scaled, y = IMDB_scaled )) +
@@ -510,6 +516,7 @@ p1 + p2 + p3 +
 Upon initial Bivariate EDA, a clear linear relationship does not seem to appear between film's gross in millions and our three potential predictor variables. Perhaps later, to fit a model, we will need to find a variable transformation that gives us a promising model.
 
 ```{r}
+#| label: IMDB vs decade
 library(patchwork)
 
 imdb_top_1000 %>% 
@@ -526,6 +533,7 @@ imdb_top_1000 %>%
 Judging from this initial bivariate EDA of decade released vs the scaled IMDB score, there seems to be a negative correlation between date and IMDB score; as movies are newer (coming out in more recent decades), the median scaled IMDB score tends to be lower.
 
 ```{r}
+#| label: metaScore vs decade
 imdb_top_1000 %>% 
   ggplot(aes(x = decade, y = Meta_score )) +
   geom_boxplot() +
@@ -539,6 +547,7 @@ imdb_top_1000 %>%
 Similarly to IMDB score, the critics' median MetaScores also seem to be lower as movies are newer. In other words, the overall aggregated critic scores for films tend to be lower for movies in more recent decades.
 
 ```{r}
+#| label: decade vs difference
 imdb_top_1000 %>% 
   ggplot(aes(x = decade, y = difference )) +
   geom_boxplot() +
@@ -552,6 +561,7 @@ imdb_top_1000 %>%
 Judging from this EDA, the median difference between `Meta_score` and `IMDB_scaled` also tends to be lower as movies are newer. In other words, MetaScores tend to be lower than IMDB scores in more recent decades.
 
 ```{r}
+#| label: responses and runtime
 library(patchwork)
 p1 <- imdb_top_1000 %>% 
   ggplot(aes(x = runtime, y = IMDB_scaled )) +
@@ -585,6 +595,7 @@ Similar to our gross predictor, a clear linear relationship does not seem to app
 
 ```{r}
 imdb_top_1000 %>% 
+  #| label: interaction
   ggplot(aes(x = gross_cent, y = difference, color = certificate)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
