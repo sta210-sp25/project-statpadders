@@ -22,5 +22,6 @@ The data dictionary for your data file(s) using the following format.
 | Certificate | Certificate earned by that movie |
 | Genre | Genre of the movie |
 | Difference | Scaled difference between Metascore and IMDB score |
+| Difference_binary | binary variable 1 if audience score's divergence is +/- 1 SD from the mean, 0 if otherwise |
 
 
