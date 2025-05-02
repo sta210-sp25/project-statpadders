@@ -1,5 +1,7 @@
-Predicting IMDB and Metascore
-by Statpadders
+Analysis of Divergence Between Audience and Critic Scores
+From Top 1000 IMDB Films 1950 - 2019
+
+Statpadders: Camden Reeves, Toma Shigaki-Than, CJ Frederickson
 
 Data dictionary
 
@@ -7,9 +9,13 @@ The data dictionary can be found here. Among the dataset, we will use the follow
 
 Response variables:
 
-IMDB_Rating - Rating of the movie at IMDB site
+IMDB_scaled - Rating of the movie at IMDB site, scaled to match meta-score
 
 Meta_score - Score earned by the movie 
+
+difference - Difference from which the IMDB score diverges from the MetaScore
+
+difference_binary - 
 
 Identifiers:
 
