@@ -16,6 +16,7 @@ Meta_score - Score earned by the movie 
 difference - Difference from which the IMDB score diverges from the MetaScore
 
 difference_binary - binary variable of differecne which takes on values 1 and 0
+
  **1 (divergent):** if the difference was less than -13 or greater than 9, corresponding approximately to films with audience-critic score differences exceeding ±1 standard deviation from the mean.
 
 **0 (non-divergent):** otherwise.
