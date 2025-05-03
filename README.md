@@ -1,5 +1,4 @@
-# Analysis of Divergence Between Audience and Critic Scores**
-**From Top 1000 IMDB Films 1950 - 2019**
+# Analysis of Divergence Between Audience and Critic Scores From Top 1000 IMDB Films 1950 - 2019
 
 **Statpadders:** Camden Reeves, Toma Shigaki-Than, CJ Frederickson
 
