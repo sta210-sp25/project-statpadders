@@ -2,8 +2,8 @@
 
 **Statpadders:** Camden Reeves, Toma Shigaki-Than, CJ Frederickson
 
-# Description
-This project analyzes factors contributing to significant differences between critic and audience film ratings. Using logistic regression, it identifies structural features that predict when a film defies critical consensus.
+# Project Overview
+This project analyzes the factors that contribute to significant divergence between audience and critic scores for top IMDb films. Using a dataset of the top 1,000 movies on IMDB (focusing on those released between 1950 and 2019), we built a logistic regression model to identify which structural attributes could be associated with audience–critic disagreement. The model prioritizes sensitivity to better detect rare but meaningful cases of divergence and offers insights into the limitations of using high-level metadata to explain subjective reception differences. This repository includes the data processing workflow, statistical modeling code, and final report.
 
 
 # Data dictionary
