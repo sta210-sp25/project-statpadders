@@ -1,13 +1,13 @@
-**Analysis of Divergence Between Audience and Critic Scores**
+# Analysis of Divergence Between Audience and Critic Scores**
 **From Top 1000 IMDB Films 1950 - 2019**
 
 **Statpadders:** Camden Reeves, Toma Shigaki-Than, CJ Frederickson
 
-**Description**
+# Description
 This project analyzes factors contributing to significant differences between critic and audience film ratings. Using logistic regression, it identifies structural features that predict when a film defies critical consensus.
 
 
-Data dictionary
+# Data dictionary
 
 
 | Variable  | Description               |
