@@ -28,7 +28,7 @@ The data dictionary for your data file(s) using the following format.
 | runtime* | total runtime of the movie (in minutes), factored as a numeric variable |
 | runtime_cent* | total runtime of the movie (in minutes), mean-centered for interpretability |
 | Certificate | Censorship certificate earned by that movie |
-| certificate* | Censorship certificate earned by that movie, consolodated into G, PG, PG-13, R and Other for modern interpretability |
+| certificate* | Censorship certificate earned by that movie, consolodated into "G", PG, PG-13, R and Other for modern interpretability |
 | Genre | Genre of the movie |
 | difference* | Scaled difference between Metascore and IMDB score |
 | difference_binary* | binary variable 1 if audience score's divergence is +/- 1 SD from the mean, 0 if otherwise |
