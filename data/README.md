@@ -33,6 +33,6 @@ The data dictionary for your data file(s) using the following format.
 | difference* | Scaled difference between Metascore and IMDB score |
 | difference_binary* | binary variable 1 if audience score's divergence is +/- 1 SD from the mean, 0 if otherwise |
 
-* *denotes variable created or mutated from its original state for the purpose of our evaluation*
+\* *denotes variable created or mutated from its original state for the purpose of our evaluation*
 
 
