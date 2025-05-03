@@ -10,8 +10,8 @@ The data dictionary for your data file(s) using the following format.
 
 | Variable  | Description               |
 |:----------|:--------------------------|
-| IMDB_Rating | Rating of the movie at IMDB site |
-| IMDB_scaled | Rating of the movie at IMDB site, scaled to be out of 100 points, (for comparability to Meta_Score |
+| IMDB_Rating | Rating of the movie at IMDB site, out of 10 points |
+| IMDB_scaled^* | Rating of the movie at IMDB site, scaled to be out of 100 points, (for comparability to Meta_Score |
 | Meta_score | Aggregate critics' score earned by the movie, out of 100 points |
 | Series_Title | Name of the movie |
 | Director | Name of the Director |
